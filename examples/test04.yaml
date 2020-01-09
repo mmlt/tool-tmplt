@@ -1,0 +1,9 @@
+# Test with thycotic credentials.
+# Invokation: thycotic -a test04.yaml
+
+templates:
+- file: test04.tpl
+values:
+  audience: world
+  team:
+    lead: pipo

@@ -1,0 +1,9 @@
+# Test .Files functions.
+# Invokation: thycotic -a test05.yaml
+
+templates:
+  - file: test05.tpl
+values:
+  audience: world
+  team:
+    lead: pipo

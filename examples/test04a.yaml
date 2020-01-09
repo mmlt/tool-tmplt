@@ -1,0 +1,12 @@
+# Generic values can be overridden with template specific values.
+
+templates:
+  - file: test04.tpl
+    values:
+      team:
+        lead: klukkluk
+
+values:
+  audience: world
+  team:
+    lead: pipo
