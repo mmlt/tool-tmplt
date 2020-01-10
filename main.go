@@ -28,13 +28,13 @@ var (
 		`Filename of a yaml file that lists templates and the values to expand.`)
 	setFile = flag.String("set-file", "",
 		`Filename of a yaml file with values.`)
-	usage = `Sxtmplt %s 
-sxtmplt reads template files and expands {{ }} occurrences. Output goes to stdout.
+	usage = `tmplt %s 
+tmplt reads template files and expands {{ }} occurrences. Output goes to stdout.
 
 Examples:
-sxtmplt -t <templatefile> to expand a single template file.
+tmplt -t <templatefile> to expand a single template file.
 
-sxtmplt -a <listfile> takes a yaml file with templates and values fields like this:
+tmplt -a <listfile> takes a yaml file with templates and values fields like this:
     templates:
     - file: hello.tpl
       values:
@@ -45,7 +45,7 @@ sxtmplt -a <listfile> takes a yaml file with templates and values fields like th
       team:
         lead: pipo
 Assuming 'hello.tpl' contains: {{ .Values.team.lead }} says hello {{ .Values.audience }}!
-running sxtmplt -a test.yaml produces: klukkluk says hello world!
+running tmplt -a test.yaml produces: klukkluk says hello world!
 
 
 Functions:
@@ -78,7 +78,7 @@ Other functions:
 Beware: file access is not sanitized.
 
 
-Usage: sxtmplt [options...]
+Usage: tmplt [options...]
 `
 )
 
