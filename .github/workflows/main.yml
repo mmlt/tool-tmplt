@@ -1,7 +1,5 @@
 on:
   push:
-    #branches:
-    #- master
     # Sequence of patterns matched against refs/tags
     tags:
     - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
@@ -22,10 +20,14 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@master
       
+    - name: Get the version from tag
+      id: get_version
+      run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
+      
     - name: Build
       run: make build
       env:
-        VERSION: ${{ github.ref }}
+        VERSION: ${{ steps.get_version.outputs.VERSION }}
 
     - name: Create Release
       id: create_release
@@ -45,6 +47,6 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./bin/tmplt-${{ github.ref }}-linux-amd64
-        asset_name: tmplt-${{ github.ref }}-linux-amd64
+        asset_path: ./bin/tmplt-${{ steps.get_version.outputs.VERSION }}-linux-amd64
+        asset_name: tmplt-${{ steps.get_version.outputs.VERSION }}-linux-amd64
         asset_content_type: application/octet-stream
