@@ -18,7 +18,7 @@ import (
 )
 
 // Run expands one or more templates.
-func Run(provider, url, username, passw, tmplt, all, setFile string, env map[string]string, out io.Writer) error {
+func Run(provider, url, username, passw, domain, tmplt, all, setFile string, env map[string]string, out io.Writer) error {
 	// get override values
 	cliValues, err := readValuesFromYamlFile(setFile)
 	if err != nil {
@@ -34,7 +34,7 @@ func Run(provider, url, username, passw, tmplt, all, setFile string, env map[str
 	// override sprig function to make sure a sanitized environment is used.
 	functions["env"] = func(s string) string { return env[s] }
 	functions["expandenv"] = func(s string) string { return "<expandenv is not supported>" }
-	functions = addSecretFunction(functions, provider, url, username, passw)
+	functions = addSecretFunction(functions, provider, url, username, passw, domain)
 
 	if tmplt != "" {
 		// expand template
@@ -93,10 +93,10 @@ func expand(filename string, functions template.FuncMap, data interface{}, out i
 }
 
 // AddSecretFunction
-func addSecretFunction(functions template.FuncMap, provider, url, username, passw string) template.FuncMap {
+func addSecretFunction(functions template.FuncMap, provider, url, username, passw, domain string) template.FuncMap {
 	switch provider {
 	case "thycotic":
-		client, token, err := thycotic.Login(url, username, passw)
+		client, token, err := thycotic.Login(url, username, passw, domain)
 		if err != nil {
 			glog.Exitf("thycotic: login failed: %v", err)
 		}
@@ -125,17 +125,7 @@ func addSecretFunction(functions template.FuncMap, provider, url, username, pass
 	return functions
 }
 
-/*TODO // AddThycotic adds a function to retrieve secrets from thycotic.
-func addThycotic(functions template.FuncMap, url, username, passw string) {
-	client, token, err := thycoticLogin(url, username, passw)
-	if err != nil {
-		glog.Exitf("thycotic login failed: %v", err)
-	}
-
-	// add {{thycotic 1234 "Fieldnane"}} support.
-	functions["thycotic"] = func(id int, item string) string { return getSecret(int32(id), item, client, token) }
-}*/
-
+// GetDefaultFunctions adds template functions that are commonly used.
 func getDefaultFunctions() template.FuncMap {
 	answer := sprig.TxtFuncMap()
 	// add extra functionality

@@ -20,6 +20,8 @@ var (
 		`For provider=thycotic; username of account to retrieve secret with.`)
 	passw = flag.String("p", "",
 		`For provider=thycotic; password of account to retrieve secret with.`)
+	domain = flag.String("d", "",
+		`For provider=thycotic; domain of account to retrieve secret with.`)
 	tmplt = flag.String("t", "",
 		`Filename of the template to expand.`)
 	all = flag.String("a", "",
@@ -96,7 +98,7 @@ func main() {
 	}
 
 	glog.V(2).Infof("provider=%s url=%s tmplt=%s all=%s set-file=%s", *provider, *url, *tmplt, *all, *setFile)
-	err := expand.Run(*provider, *url, *username, *passw, *tmplt, *all, *setFile, expand.OSEnvironment(), os.Stdout)
+	err := expand.Run(*provider, *url, *username, *passw, *domain, *tmplt, *all, *setFile, expand.OSEnvironment(), os.Stdout)
 	if err != nil {
 		glog.Exit(err)
 	}
@@ -111,8 +113,8 @@ func validate() (msg string, ok bool) {
 
 	switch *provider {
 	case "thycotic":
-		if (*username == "") || (*passw == "") {
-			return "provider=thycotic requires -u and -p to be set.", false
+		if (*username == "") || (*passw == "") || (*domain == "") {
+			return "provider=thycotic requires -u -p and -d to be set.", false
 		}
 		if *url == "" {
 			return "provider=thycotic requires -url to be set.", false
